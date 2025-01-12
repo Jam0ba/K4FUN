@@ -1,0 +1,41 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bwgggh447wl8l"
+path="res://.godot/imported/muzzleflash1.glb-f56fd525c97f560af4208d25532cabd8.scn"
+
+[deps]
+
+source_file="res://scenes/VFX/resources/resources/muzzleflash1.glb"
+dest_files=["res://.godot/imported/muzzleflash1.glb-f56fd525c97f560af4208d25532cabd8.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+import_script/path=""
+_subresources={
+"materials": {
+"muzzleflash": {
+"use_external/enabled": true,
+"use_external/path": "res://scenes/VFX/muzzle_flash/assets/muzzle_flash.material"
+}
+}
+}
+gltf/naming_version=1
+gltf/embedded_image_handling=1

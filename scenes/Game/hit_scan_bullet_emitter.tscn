@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://n8ibjhny3vlr"]
+
+[ext_resource type="Script" path="res://scenes/VFX/scripts/hit_scan_bullet_emitter.gd" id="1_yo8t4"]
+[ext_resource type="PackedScene" uid="uid://bwgppi28wakhv" path="res://scenes/Game/bullet_hit_effeckt.tscn" id="2_8bss4"]
+
+[node name="HitScanBulletEmitter" type="Node3D"]
+script = ExtResource("1_yo8t4")
+BULLET_HIT_EFFECKT = ExtResource("2_8bss4")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+process_mode = 3
+enabled = false
+target_position = Vector3(0, 0, -8000)
+collision_mask = 13
+hit_from_inside = true
+collide_with_areas = true

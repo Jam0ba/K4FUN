@@ -1,0 +1,100 @@
+[gd_scene load_steps=12 format=3 uid="uid://bwgppi28wakhv"]
+
+[ext_resource type="Script" path="res://scenes/VFX/scripts/bullet_hit_effeckt.gd" id="1_rraaa"]
+[ext_resource type="Texture2D" uid="uid://dx7s3nnrjq1f7" path="res://Environment/BulletHole.png" id="2_arqt0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ue0q7"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_color = Color(0.446777, 0.446777, 0.446777, 1)
+albedo_texture = ExtResource("2_arqt0")
+texture_filter = 2
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v7gyv"]
+spread = 180.0
+initial_velocity_min = 3.0
+initial_velocity_max = 5.0
+scale_min = 0.04
+scale_max = 0.04
+
+[sub_resource type="QuadMesh" id="QuadMesh_stcls"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kcrjn"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[sub_resource type="Gradient" id="Gradient_5gx7h"]
+offsets = PackedFloat32Array(0.0363636, 0.963636)
+colors = PackedColorArray(0.190762, 0.190762, 0.190762, 0.380392, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bsabt"]
+gradient = SubResource("Gradient_5gx7h")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_j5ip7"]
+particle_flag_rotate_y = true
+emission_shape = 1
+emission_sphere_radius = 0.2
+angle_max = 700.0
+spread = 180.0
+initial_velocity_min = 0.1
+initial_velocity_max = 0.15
+gravity = Vector3(0, 0.1, 0)
+scale_min = 0.05
+scale_max = 0.08
+color_ramp = SubResource("GradientTexture1D_bsabt")
+
+[sub_resource type="SphereMesh" id="SphereMesh_pgfc4"]
+radial_segments = 7
+rings = 3
+
+[sub_resource type="QuadMesh" id="QuadMesh_6pgoc"]
+
+[node name="BulletHitEffeckt" type="Node3D"]
+script = ExtResource("1_rraaa")
+
+[node name="SparkParticle" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_ue0q7")
+amount = 5
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_v7gyv")
+draw_pass_1 = SubResource("QuadMesh_stcls")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_kcrjn")
+amount = 5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_j5ip7")
+draw_pass_1 = SubResource("SphereMesh_pgfc4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0)
+visible = false
+mesh = SubResource("QuadMesh_6pgoc")
+
+[node name="Decal" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+size = Vector3(0.05, 0.05, 0.05)
+texture_albedo = ExtResource("2_arqt0")
+modulate = Color(0.00184107, 0.00184107, 0.00184107, 1)
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="tree_entered" from="." to="SparkParticle" method="restart"]
+[connection signal="tree_entered" from="." to="Smoke" method="restart"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

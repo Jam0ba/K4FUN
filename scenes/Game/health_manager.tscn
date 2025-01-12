@@ -1,0 +1,15 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmq274hselu4w"]
+
+[ext_resource type="Script" path="res://scripts/Game/health_manager.gd" id="1_sgtmk"]
+[ext_resource type="PackedScene" uid="uid://dfctdxhqq5l8u" path="res://scenes/VFX/effectblood/blood_hit_effeckt.tscn" id="2_1vcr2"]
+[ext_resource type="PackedScene" uid="uid://ckf62uipkspgh" path="res://scenes/VFX/effectblood/blooddecal.tscn" id="2_yv3md"]
+[ext_resource type="PackedScene" uid="uid://cjvcxghhf6v2d" path="res://scenes/VFX/effectblood/gib/gib.tscn" id="4_wyvf8"]
+
+[node name="HealthManager" type="Node3D"]
+script = ExtResource("1_sgtmk")
+blood_VFX = ExtResource("2_1vcr2")
+blood_decal = ExtResource("2_yv3md")
+gibbed_model = ExtResource("4_wyvf8")
+
+[node name="BloodRaycast" type="RayCast3D" parent="."]
+enabled = false

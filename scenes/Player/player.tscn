@@ -1,0 +1,261 @@
+[gd_scene load_steps=31 format=3 uid="uid://15gbfdlxv4xp"]
+
+[ext_resource type="Script" path="res://scripts/Player/csmovement.gd" id="1_jhhps"]
+[ext_resource type="Script" path="res://scripts/weapons/Weapon_Holder.gd" id="2_04ssy"]
+[ext_resource type="PackedScene" uid="uid://b2efm8bsujxqt" path="res://scenes/Player/weapons/glock_arms.tscn" id="3_10xm1"]
+[ext_resource type="Script" path="res://scripts/weapons/Recoil.gd" id="3_fclra"]
+[ext_resource type="PackedScene" uid="uid://dkhjnxtvd3x1k" path="res://scenes/Game/bullet_emitter.tscn" id="4_3ytgp"]
+[ext_resource type="PackedScene" uid="uid://n8ibjhny3vlr" path="res://scenes/Game/hit_scan_bullet_emitter.tscn" id="5_3t6a4"]
+[ext_resource type="PackedScene" uid="uid://boiivv0jmfawe" path="res://scenes/VFX/muzzle_flash/muzzle_flash.tscn" id="6_8tgi7"]
+[ext_resource type="PackedScene" uid="uid://bwgggh447wl8l" path="res://scenes/VFX/resources/resources/muzzleflash1.glb" id="7_54o2n"]
+[ext_resource type="PackedScene" uid="uid://cn77uj41ipydc" path="res://scenes/Player/weapons/m_4_n_arms.tscn" id="8_12266"]
+[ext_resource type="PackedScene" uid="uid://dv13dg71glyvo" path="res://scenes/Player/weapons/shot_gun_n_arms.tscn" id="9_gsjq4"]
+[ext_resource type="PackedScene" uid="uid://d2hrsoptbivej" path="res://scenes/Game/burst_emitter.tscn" id="10_2kopf"]
+[ext_resource type="PackedScene" uid="uid://dubo2ufn1emua" path="res://scenes/Game/spray_emitter.tscn" id="11_11ex0"]
+[ext_resource type="PackedScene" uid="uid://5d2jjiaguxvc" path="res://scenes/VFX/resources/resources/muzzleflash3.glb" id="11_b7ilb"]
+[ext_resource type="PackedScene" uid="uid://bmq274hselu4w" path="res://scenes/Game/health_manager.tscn" id="14_ti740"]
+[ext_resource type="Script" path="res://scripts/Player/Crosshair.gd" id="15_gw70p"]
+[ext_resource type="Script" path="res://scripts/Player/PlayerHUD.gd" id="15_mfc21"]
+[ext_resource type="Script" path="res://scenes/Player/PickupManager.gd" id="16_v7li5"]
+[ext_resource type="AudioStream" uid="uid://xkxsj88xkr3v" path="res://SoundFX/Footstep3.wav" id="18_jfryh"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ux86n"]
+
+[sub_resource type="SystemFont" id="SystemFont_ampsr"]
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_exrhb"]
+line_spacing = 2.0
+font = SubResource("SystemFont_ampsr")
+font_size = 50
+font_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[sub_resource type="SystemFont" id="SystemFont_ilfch"]
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_54krg"]
+font = SubResource("SystemFont_ilfch")
+font_size = 34
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxa2u"]
+bg_color = Color(1.58831e-05, 0.766924, 0.164844, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_0ojen"]
+subpixel_positioning = 0
+
+[sub_resource type="Theme" id="Theme_nihrd"]
+default_font = SubResource("SystemFont_0ojen")
+default_font_size = 20
+ProgressBar/colors/font_color = Color(0, 0, 0, 1)
+ProgressBar/colors/font_outline_color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_lxa2u")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_28ko6"]
+radius = 1.235
+
+[sub_resource type="Animation" id="Animation_bulho"]
+resource_name = "Crouch"
+length = 0.5
+
+[sub_resource type="Animation" id="Animation_4mn6m"]
+resource_name = "RESET"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ceudx"]
+_data = {
+"Crouch": SubResource("Animation_bulho"),
+"RESET": SubResource("Animation_4mn6m")
+}
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 41
+script = ExtResource("1_jhhps")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ux86n")
+
+[node name="Head" type="Node3D" parent="." groups=["Head"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("3_fclra")
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+
+[node name="FirePoint" type="Node3D" parent="Head/Camera3D"]
+
+[node name="Weapon_Holder" type="Node3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043357, -0.168114, -0.204832)
+script = ExtResource("2_04ssy")
+weapon_rotation_amount = 0.002
+weapon_rotation_amount_y = 0.004
+invert_weapon_sway = true
+
+[node name="Weapons" type="Node3D" parent="Head/Camera3D/Weapon_Holder"]
+unique_name_in_owner = true
+
+[node name="Glock_Arms" parent="Head/Camera3D/Weapon_Holder/Weapons" node_paths=PackedStringArray("head", "bullet_emitter", "fire_point") instance=ExtResource("3_10xm1")]
+head = NodePath("../../../..")
+bullet_emitter = NodePath("BulletEmitter")
+fire_point = NodePath("../../../FirePoint")
+max_ammo = 500
+
+[node name="BulletEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/Glock_Arms" instance=ExtResource("4_3ytgp")]
+
+[node name="HitScanBulletEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/Glock_Arms/BulletEmitter" instance=ExtResource("5_3t6a4")]
+
+[node name="MuzzleFlash" parent="Head/Camera3D/Weapon_Holder/Weapons/Glock_Arms" instance=ExtResource("6_8tgi7")]
+transform = Transform3D(-0.08, -1.20797e-08, 1.20797e-08, 1.20797e-08, -0.08, -6.99382e-09, 1.20797e-08, -6.99382e-09, 0.08, 0.103894, -0.0744333, -0.609287)
+
+[node name="muzzleflash1" parent="Head/Camera3D/Weapon_Holder/Weapons/Glock_Arms/MuzzleFlash" instance=ExtResource("7_54o2n")]
+transform = Transform3D(1, -8.47033e-22, -7.10543e-15, 0, -1, 8.74228e-08, -7.10543e-15, -8.74228e-08, -1, 0, 0, 0)
+
+[node name="muzzleflash2" parent="Head/Camera3D/Weapon_Holder/Weapons/Glock_Arms/MuzzleFlash" instance=ExtResource("7_54o2n")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="M4_n_Arms" parent="Head/Camera3D/Weapon_Holder/Weapons" node_paths=PackedStringArray("head", "bullet_emitter", "fire_point") instance=ExtResource("8_12266")]
+head = NodePath("../../../..")
+bullet_emitter = NodePath("BulletEmitter")
+fire_point = NodePath("../../../FirePoint")
+max_ammo = 500
+
+[node name="BulletEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/M4_n_Arms" instance=ExtResource("4_3ytgp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0435578, 0.168366, -0.204124)
+
+[node name="HitScanBulletEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/M4_n_Arms/BulletEmitter" instance=ExtResource("5_3t6a4")]
+
+[node name="MuzzleFlash" parent="Head/Camera3D/Weapon_Holder/Weapons/M4_n_Arms" instance=ExtResource("6_8tgi7")]
+transform = Transform3D(-0.15, 0, 2.26494e-08, 0, 0.15, 0, -2.26494e-08, 0, -0.15, -0.138798, -0.118686, 0.921866)
+
+[node name="muzzleflash1" parent="Head/Camera3D/Weapon_Holder/Weapons/M4_n_Arms/MuzzleFlash" instance=ExtResource("7_54o2n")]
+transform = Transform3D(1, -8.47033e-22, -7.10543e-15, 0, -1, 8.74228e-08, -7.10543e-15, -8.74228e-08, -1, 0, 0, 0)
+
+[node name="muzzleflash2" parent="Head/Camera3D/Weapon_Holder/Weapons/M4_n_Arms/MuzzleFlash" instance=ExtResource("7_54o2n")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="ShotGun_n_Arms" parent="Head/Camera3D/Weapon_Holder/Weapons" node_paths=PackedStringArray("head", "bullet_emitter", "fire_point") instance=ExtResource("9_gsjq4")]
+head = NodePath("../../../..")
+bullet_emitter = NodePath("BulletEmitter")
+fire_point = NodePath("../../../FirePoint")
+max_ammo = 500
+attack_rate = 0.6
+
+[node name="BulletEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/ShotGun_n_Arms" instance=ExtResource("4_3ytgp")]
+transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, 0.0435578, 0.168366, -0.204124)
+
+[node name="BurstEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/ShotGun_n_Arms/BulletEmitter" instance=ExtResource("10_2kopf")]
+burst_count = 6
+
+[node name="SprayEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/ShotGun_n_Arms/BulletEmitter/BurstEmitter" instance=ExtResource("11_11ex0")]
+spray_arc = 10.0
+
+[node name="HitScanBulletEmitter" parent="Head/Camera3D/Weapon_Holder/Weapons/ShotGun_n_Arms/BulletEmitter/BurstEmitter/SprayEmitter" instance=ExtResource("5_3t6a4")]
+
+[node name="MuzzleFlash" parent="Head/Camera3D/Weapon_Holder/Weapons/ShotGun_n_Arms" instance=ExtResource("6_8tgi7")]
+transform = Transform3D(0.3, 0, -4.20717e-14, 0, 0.3, 0, 4.20717e-14, 0, 0.3, -0.146275, -0.127699, 1.06026)
+
+[node name="muzzleflash3" parent="Head/Camera3D/Weapon_Holder/Weapons/ShotGun_n_Arms/MuzzleFlash" instance=ExtResource("11_b7ilb")]
+transform = Transform3D(1.43, 0, 1.42109e-14, 0, 1.43, 0, -1.42109e-14, 0, 1.43, 0, 0, 0)
+
+[node name="LOSRayCast3D" type="RayCast3D" parent="Head/Camera3D/Weapon_Holder"]
+
+[node name="Control" type="Control" parent="Head/Camera3D"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = 6.0
+offset_right = 39.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("15_gw70p")
+
+[node name="HealthManager" parent="." instance=ExtResource("14_ti740")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.501125, 0)
+verbos = true
+
+[node name="PlayerHUD" type="CanvasLayer" parent="."]
+script = ExtResource("15_mfc21")
+
+[node name="Control" type="Control" parent="PlayerHUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PlayerHUD/Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FPS" type="Label" parent="PlayerHUD/Control/VBoxContainer2"]
+layout_mode = 2
+text = "FPS: "
+label_settings = SubResource("LabelSettings_exrhb")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerHUD/Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -233.0
+offset_top = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Ammo" type="Label" parent="PlayerHUD/Control/VBoxContainer"]
+layout_mode = 2
+text = "Ammo: "
+label_settings = SubResource("LabelSettings_54krg")
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="PlayerHUD/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 300.0
+grow_vertical = 0
+
+[node name="ProgressBar" type="ProgressBar" parent="PlayerHUD/Control/VBoxContainer3"]
+layout_mode = 2
+theme = SubResource("Theme_nihrd")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+value = 100.0
+
+[node name="PickupManager" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+script = ExtResource("16_v7li5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupManager"]
+shape = SubResource("SphereShape3D_28ko6")
+
+[node name="AniPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_ceudx")
+}
+
+[node name="FootSteps" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("18_jfryh")
+volume_db = -20.0
+unit_size = 2.0
+max_db = 1.0
+max_distance = 2.0

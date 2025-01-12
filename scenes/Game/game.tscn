@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://vusm7313tgfj"]
+
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_ux6ta"]
+[ext_resource type="PackedScene" uid="uid://15gbfdlxv4xp" path="res://scenes/Player/player.tscn" id="3_bgqve"]
+[ext_resource type="PackedScene" uid="uid://dy10gogscs23o" path="res://scenes/floor.tscn" id="4_mv057"]
+[ext_resource type="PackedScene" uid="uid://dboeo5bipeoy4" path="res://scenes/Enemy/monster.tscn" id="7_l2ifv"]
+[ext_resource type="PackedScene" uid="uid://dvfe4ifa0mkxc" path="res://scenes/Game/portal_frame_2.tscn" id="12_geee3"]
+[ext_resource type="PackedScene" uid="uid://bc4fguget0i40" path="res://scenes/Player/weapons/shotgun_pickup.tscn" id="14_hxy5b"]
+[ext_resource type="PackedScene" uid="uid://cla4mf3qwsdv2" path="res://scenes/Player/weapons/m_4_pickup.tscn" id="14_jt26f"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_kgdgq"]
+vertices = PackedVector3Array(-49.25, 1.15679, -102.128, -49.25, 1.15679, -3.628, 49.25, 1.15679, -3.628, 49.25, 1.15679, -102.128)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+geometry_source_geometry_mode = 1
+agent_radius = 0.6
+agent_max_slope = 60.0
+
+[sub_resource type="Environment" id="Environment_bgutb"]
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_ux6ta")
+monster = ExtResource("7_l2ifv")
+
+[node name="Player" parent="." instance=ExtResource("3_bgqve")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 12.929, -60.9851)
+
+[node name="ENV" type="Node3D" parent="." groups=["navigation_mesh_source_group"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -29.878)
+
+[node name="Floor" parent="ENV" instance=ExtResource("4_mv057")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0932083, -23)
+disable_mode = 1
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+visible = false
+navigation_mesh = SubResource("NavigationMesh_kgdgq")
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16255, 2.0513, -101.728)
+
+[node name="Point" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00124038, -0.0709467, -0.111977)
+
+[node name="M4" parent="." instance=ExtResource("14_jt26f")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 16.3696, 0.321699, -61.5279)
+
+[node name="Shotgun_pickup" parent="." instance=ExtResource("14_hxy5b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1639, 0.817799, -65.4049)
+
+[node name="PortalFrame2" parent="." instance=ExtResource("12_geee3")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 1.14439, -0.2419, -101.484)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_bgutb")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.148509, 4.24288, -89.5984)
+shadow_enabled = true
+shadow_blur = 2.0
+omni_range = 35.7369
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]

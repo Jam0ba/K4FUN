@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckf62uipkspgh"]
+
+[ext_resource type="Script" path="res://scenes/VFX/scripts/bullet_hit_effeckt.gd" id="1_itnxw"]
+[ext_resource type="Texture2D" uid="uid://dl7jeyua5rrrk" path="res://Environment/blood_splatter.png" id="2_yfbea"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_6pgoc"]
+
+[node name="bloodHitEffeckt" type="Node3D"]
+script = ExtResource("1_itnxw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0)
+visible = false
+mesh = SubResource("QuadMesh_6pgoc")
+
+[node name="Decal" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+size = Vector3(1, 0.2, 1)
+texture_albedo = ExtResource("2_yfbea")
+emission_energy = 0.2
+modulate = Color(0.53954, 0, 0.0149579, 1)
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

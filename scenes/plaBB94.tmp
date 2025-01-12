@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://15gbfdlxv4xp"]
+
+[ext_resource type="Script" path="res://scripts/csmovement.gd" id="1_jhhps"]
+[ext_resource type="Script" path="res://scripts/Weapon_Holder.gd" id="2_04ssy"]
+[ext_resource type="PackedScene" uid="uid://cn77uj41ipydc" path="res://scenes/m_4_n_arms.tscn" id="2_yjesn"]
+[ext_resource type="PackedScene" uid="uid://bmq274hselu4w" path="res://scenes/health_manager.tscn" id="4_gwyp5"]
+[ext_resource type="PackedScene" uid="uid://b2efm8bsujxqt" path="res://scenes/glock_arms.tscn" id="4_ss4ka"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ux86n"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_jhhps")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ux86n")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+
+[node name="Weapon_Holder" type="Node3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.168114, -0.115229)
+script = ExtResource("2_04ssy")
+invert_weapon_sway = true
+
+[node name="Weapons" type="Node3D" parent="Head/Camera3D/Weapon_Holder"]
+
+[node name="M4_n_Arms" parent="Head/Camera3D/Weapon_Holder/Weapons" instance=ExtResource("2_yjesn")]
+
+[node name="Glock_Arms" parent="Head/Camera3D/Weapon_Holder/Weapons" instance=ExtResource("4_ss4ka")]
+visible = false
+
+[node name="HealthManager" parent="." instance=ExtResource("4_gwyp5")]
+unique_name_in_owner = true

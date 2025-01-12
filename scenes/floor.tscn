@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://dy10gogscs23o"]
+
+[ext_resource type="Texture2D" uid="uid://c6ypxo6nuu16r" path="res://Environment/assets/Dark.png" id="1_a2itu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lfoiy"]
+albedo_texture = ExtResource("1_a2itu")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_4npfx"]
+lightmap_size_hint = Vector2i(1004, 511)
+add_uv2 = true
+size = Vector3(100, 0.5, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s0jkn"]
+size = Vector3(100, 0.5, 100)
+
+[node name="Floor" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_lfoiy")
+mesh = SubResource("BoxMesh_4npfx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_s0jkn")

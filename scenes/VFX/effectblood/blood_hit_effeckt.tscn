@@ -1,0 +1,112 @@
+[gd_scene load_steps=14 format=3 uid="uid://dfctdxhqq5l8u"]
+
+[ext_resource type="Script" path="res://scenes/VFX/scripts/bullet_hit_effeckt.gd" id="1_oafgn"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hwum5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_efera"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_color = Color(0.309804, 0.0745098, 0.0745098, 1)
+albedo_texture = SubResource("CompressedTexture2D_hwum5")
+texture_filter = 2
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_ig42b"]
+_data = [Vector2(0.702312, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_yon52"]
+curve = SubResource("Curve_ig42b")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dfikt"]
+spread = 180.0
+initial_velocity_min = 3.0
+initial_velocity_max = 5.0
+scale_min = 0.05
+scale_max = 0.1
+scale_curve = SubResource("CurveTexture_yon52")
+
+[sub_resource type="QuadMesh" id="QuadMesh_stcls"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_av5s7"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_color = Color(0.309804, 0.0745098, 0.0745098, 1)
+albedo_texture = SubResource("CompressedTexture2D_hwum5")
+texture_filter = 2
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_5gx7h"]
+offsets = PackedFloat32Array(0.0363636, 0.963636)
+colors = PackedColorArray(0.190762, 0.190762, 0.190762, 0.380392, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bsabt"]
+gradient = SubResource("Gradient_5gx7h")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_j5ip7"]
+particle_flag_rotate_y = true
+emission_shape = 1
+emission_sphere_radius = 0.2
+angle_max = 700.0
+spread = 180.0
+initial_velocity_min = 0.1
+initial_velocity_max = 0.15
+gravity = Vector3(0, 0.1, 0)
+scale_min = 0.05
+scale_max = 0.08
+color_ramp = SubResource("GradientTexture1D_bsabt")
+
+[sub_resource type="SphereMesh" id="SphereMesh_pgfc4"]
+radial_segments = 7
+rings = 3
+
+[sub_resource type="QuadMesh" id="QuadMesh_6pgoc"]
+
+[node name="BloodHitEffeckt" type="Node3D"]
+script = ExtResource("1_oafgn")
+
+[node name="SparkParticle" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_efera")
+amount = 10
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_dfikt")
+draw_pass_1 = SubResource("QuadMesh_stcls")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+visible = false
+material_override = SubResource("StandardMaterial3D_av5s7")
+amount = 5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_j5ip7")
+draw_pass_1 = SubResource("SphereMesh_pgfc4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0)
+visible = false
+mesh = SubResource("QuadMesh_6pgoc")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="tree_entered" from="." to="SparkParticle" method="restart"]
+[connection signal="tree_entered" from="." to="Smoke" method="restart"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
